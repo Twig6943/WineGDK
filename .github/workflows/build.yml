@@ -89,6 +89,10 @@ jobs:
             ocl-icd-opencl-dev \
             p7zip-full
 
+      - name: Clone Wine repository
+        run: |
+          git clone https://github.com/Twig6943/WineGDK /tmp/wine64-build
+
       - name: Build Wine64
         run: |
           cd /tmp/wine64-build
