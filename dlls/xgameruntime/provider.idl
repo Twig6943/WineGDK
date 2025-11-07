@@ -27,10 +27,19 @@ typedef void* XSystemHandle;
 
 typedef enum XSystemHandleType XSystemHandleType;
 typedef enum XSystemHandleCallbackReason XSystemHandleCallbackReason;
+typedef enum XGameRuntimeFeature XGameRuntimeFeature;
 
+typedef struct XVersion XVersion;
+typedef struct XSystemAnalyticsInfo XSystemAnalyticsInfo;
+
+interface IWineAsyncWorkImpl;
 interface IXSystemImpl;
+interface IXSystemAnalyticsImpl;
+interface IXGameRuntimeFeatureImpl;
 
-coclass XSystem;
+coclass XSystemImpl;
+coclass XSystemAnalyticsImpl;
+coclass XGameRuntimeFeatureImpl;
 
 enum XSystemHandleType
 {
@@ -52,19 +61,68 @@ enum XSystemHandleType
     GameUiTextEntry            = 0x0f
 };
 
+enum XGameRuntimeFeature
+{  
+    XAccessibility             = 0,  
+    XAppCapture                = 1,  
+    XAsync                     = 2,  
+    XAsyncProvider             = 3,  
+    XDisplay                   = 4,  
+    XGame                      = 5,  
+    XGameInvite                = 6,  
+    XGameSave                  = 7,  
+    XGameUI                    = 8,  
+    XLauncher                  = 9,  
+    XNetworking                = 10,  
+    XPackage                   = 11,  
+    XPersistentLocalStorage    = 12,  
+    XSpeechSynthesizer         = 13,  
+    XStore                     = 14,  
+    XSystem                    = 15,  
+    XTaskQueue                 = 16,  
+    XThread                    = 17,  
+    XUser                      = 18,  
+    XError                     = 19,  
+    XGameEvent                 = 20, 
+    XGameStreaming             = 21, 
+};
+
 enum XSystemHandleCallbackReason
 {
     Created     = 0x00,
     Destroyed   = 0x01
 };
 
-/* type-pruning version of XSystemHandleCallback */
-typedef void (__stdcall *XSystemHandleCallback)(
-    XSystemHandle handle,
-    XSystemHandleType type,
-    XSystemHandleCallbackReason reason,
-    void* context
-);
+struct XVersion {  
+    union
+    {
+        struct
+        {
+            UINT16 major;  
+            UINT16 minor;  
+            UINT16 build;  
+            UINT16 revision;
+        };
+        UINT64 Value;
+    };
+};
+
+struct XSystemAnalyticsInfo
+{
+    XVersion osVersion;  
+    XVersion hostingOsVersion;  
+    CHAR family[64];  
+    CHAR form[64];
+};
+
+[
+    object,
+    uuid(7664288b-54e9-45f9-af0b-b4ad047fa194)
+]
+interface IWineAsyncWorkImpl : IUnknown
+{
+
+}
 
 [
     object,
@@ -87,9 +145,44 @@ interface IXSystemImpl : IUnknown
 }
 
 [
+    object,
+    uuid(b884675d-b738-4a9c-815d-9a9a1e0c6c9b)
+]
+interface IXSystemAnalyticsImpl : IUnknown
+{
+    XSystemAnalyticsInfo XSystemGetAnalyticsInfo();
+}
+
+[
+    object,
+    uuid(8836fe87-edb9-4fe3-8dad-05f0d2cd5b40)
+]
+interface IXGameRuntimeFeatureImpl : IUnknown
+{
+    BOOLEAN XGameRuntimeIsFeatureAvailable( [in] XGameRuntimeFeature feature );
+}
+
+[
     uuid(e349bd1a-fc20-4e40-b99c-4178cc6b409f)
 ]
-coclass XSystem
+coclass XSystemImpl
 {
     [default] interface IXSystemImpl;
 }
+
+[
+    uuid(b884675d-b738-4a9c-815d-9a9a1e0c6c9b)
+]
+coclass XSystemAnalyticsImpl
+{
+    [default] interface IXSystemAnalyticsImpl;
+}
+
+[
+    uuid(8836fe87-edb9-4fe3-8dad-05f0d2cd5b40)
+]
+coclass XGameRuntimeFeatureImpl
+{
+    [default] interface IXGameRuntimeFeatureImpl;
+}
+

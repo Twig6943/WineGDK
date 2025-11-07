@@ -1,11 +1,16 @@
 # NOTES FOR PEOPLE TRYING TO RUN MINECRAFT'S GDK BUILD
 
-This is a very quick and dirty repo that incorporates the bare minimum WinRT patches from my other WineCoreUAP project, and currently there's a memory alignment issue regarding console output.   
-You can temporarily fix this by setting `WINEDEBUG=+textinput,+gdkc,+enumeration,+combase,+propsys,+trace`   
-I will fix this at a later date when I apply more commits to my WineCoreUAP project.   
+Online services have not been added yet. This is because `XUser` and `XNetworking` haven't been implemented in `xgameruntime.dll` yet.
 
-Since IGameInput is still not implemented yet, the game does not support mouse inputs.
-You can either use a game pad or turn on "Full Keyboard Gameplay" within Mouse/Keyboard settings within the game.
+### NOTES ABOUT THIS PROJECT
+
+Unfortunately, since I don't have the right conditions to be able to   
+push my changes upstream, I've decided to declare every part of my contributions that isn't    
+derived from other parts of the wine project, CC0 (A.K.A "Public Domain") (i.e xgameruntime).
+**What this means**:  
+You're allowed to derive, redistribute and reimplement my code at will,  
+without any attributions.
+**THIS ONLY APPLIES TO THE CODE I HAVE WRITTEN, NOT THE REST OF WINE'S PROJECT!**
 
 ## INTRODUCTION
 

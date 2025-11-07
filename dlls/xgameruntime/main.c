@@ -27,6 +27,11 @@ WINE_DEFAULT_DEBUG_CHANNEL(xgameruntime);
 
 static HMODULE xgameruntime;
 
+HRESULT WINAPI DllCanUnloadNow(void)
+{
+    return xgameruntime != NULL ? S_FALSE : S_OK;
+}
+
 BOOL WINAPI DllMain( HINSTANCE hinst, DWORD reason, void *reserved )
 {
     TRACE("inst %p, reason %lu, reserved %p.\n", hinst, reason, reserved);
@@ -94,9 +99,25 @@ HRESULT WINAPI QueryApiImpl( GUID *runtimeClassId, REFIID interfaceId, void **ou
 
     TRACE("runtimeClassId %s, interfaceId %s, out %p\n", debugstr_guid(runtimeClassId), debugstr_guid(interfaceId), out);
 
-    if ( IsEqualGUID( runtimeClassId, &CLSID_XSystem ) )
+    if ( IsEqualGUID( runtimeClassId, &CLSID_XSystemImpl ) )
     {
         return IXSystemImpl_QueryInterface( x_system_impl, interfaceId, out );
+    }
+    else if ( IsEqualGUID( runtimeClassId, &CLSID_XGameRuntimeFeatureImpl ) )
+    {
+        return IXGameRuntimeFeatureImpl_QueryInterface( x_game_runtime_feature_impl, interfaceId, out );
+    }
+    else if ( IsEqualGUID( runtimeClassId, &CLSID_XSystemAnalyticsImpl ) )
+    {
+        return IXSystemAnalyticsImpl_QueryInterface( x_system_analytics_impl, interfaceId, out );
+    }
+    else if ( IsEqualGUID( runtimeClassId, &CLSID_XThreadingImpl ) )
+    {
+        return IXThreadingImpl_QueryInterface( x_threading_impl, interfaceId, out );
+    }
+    else if ( IsEqualGUID( runtimeClassId, &CLSID_XNetworkingImpl ) )
+    {
+        return IXNetworkingImpl_QueryInterface( x_networking_impl, interfaceId, out );
     }
     
     FIXME( "%s not implemented, returning E_NOINTERFACE.\n", debugstr_guid( runtimeClassId ) );
